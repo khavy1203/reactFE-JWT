@@ -1,11 +1,13 @@
 import './Login.scss';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import { loginUser } from '../../services/userService';
-
+import { UserContext } from '../../context/UserContext';
+//cách sử dụng useContext
 
 const Login = (props) => {
+    const { loginContext } = useContext(UserContext);
     const [accountLogin, setAccountLogin] = useState("");
     const [password, setPassword] = useState("");
     const defaultValidInput = {
@@ -14,10 +16,7 @@ const Login = (props) => {
     }
     const [objCheckInput, setobjCheckInput] = useState(defaultValidInput);
 
-    useEffect(() => {
-        let session = sessionStorage.getItem('account');
-        if (session) history.push('/home');
-    }, []);
+
     const handleLogin = async () => {
         setobjCheckInput(defaultValidInput);
         if (!accountLogin) {
@@ -33,14 +32,20 @@ const Login = (props) => {
         let response = await loginUser(accountLogin, password);
         if (response && +response.EC === 0) {
             //success
+            let groupWithRoles = response.DT.groupWithRoles;
+            let email = response.DT.email;
+            let username = response.DT.username;
+            let token = response.DT.access_token;
             let data = {
                 isAuthenticated: true,
-                token: 'fake data'
+                token,
+                account: { groupWithRoles, email, username }
             }
-            sessionStorage.setItem('account', JSON.stringify(data));
+
+            localStorage.setItem('jwt', token);
+            loginContext(data);
             history.push("/users");
-            window.location.reload();
-            //redux
+
         }
         if (response && +response.EC !== 0) {
             //fail

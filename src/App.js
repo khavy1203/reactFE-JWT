@@ -2,30 +2,55 @@ import {
   BrowserRouter as Route,
 } from "react-router-dom";
 import './App.scss';
-import Nav from './component/Navigation/Nav';
+import NavHeader from './component/Navigation/NavHeader';
 import AppRoutes from './Routes/AppRoute'
 import { ToastContainer } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
+import { Rings } from 'react-loader-spinner';
+import { UserContext } from './context/UserContext';
 
 
 function App() {
-  const [account, setAccount] = useState({});
-  useEffect(() => {
-    let session = sessionStorage.getItem('account');
-    if (session) {
-      setAccount(JSON.parse(session));
-    }
-  }, [])
+  const { user } = useContext(UserContext);
   return (
+
     <>
       <Route>
-        <div className="app-header">
+        {user && user.isLoading ?
+          <>
+            <div className="loading-container">
+              <Rings
+                height={100}
+                with={100}
+                color='#1877f2'
+                ariaLabel='loading-indicator'
+              />
+              <div>Loading data...</div>
+            </div>
+          </>
+          :
+          <>
+            <div className="app-header">
+              <NavHeader />
+            </div>
+            <div className="app-container">
+              <AppRoutes />
+            </div>
+
+          </>
+        }
+
+
+        {/* <div className="app-header">
           <Nav />
         </div>
         <div className="app-container">
           <AppRoutes />
-        </div>
+        </div> */}
+
+
+
       </Route>
       <ToastContainer
         position="top-right"

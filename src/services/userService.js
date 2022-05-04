@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import axios from '../setup.js';
+import axios from '../setup/axios.js';
 
 const loginRegisterUser = async (email, phone, username, password) => {
     return await axios.post('/api/v1/register', {
@@ -13,7 +13,7 @@ const loginUser = async (account, password) => {
 }
 
 const fetchAllUser = async (page, limit) => {
-    return await axios.get(`/api/v1/user/read/?page=${page}&limit=${limit}`);
+    return await axios.get(`/api/v1/user/read?page=${page}&limit=${limit}`);
 }
 const deleteUser = async (user) => {
     return await axios.delete('/api/v1/user/delete', { data: { id: user.id } });
@@ -31,6 +31,12 @@ const updateCurrentUser = async (userData) => {
         ...userData
     });
 }
+const getUserAccount = async () => {
+    return await axios.get('/api/v1/account');
+}
+const logoutUser = async () => {
+    return await axios.post('/api/v1/logout');
+}
 export {
     loginRegisterUser,
     loginUser,
@@ -38,5 +44,7 @@ export {
     deleteUser,
     fetchGroup,
     createNewUser,
-    updateCurrentUser
+    updateCurrentUser,
+    getUserAccount,
+    logoutUser
 }
