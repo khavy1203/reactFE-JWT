@@ -1,16 +1,18 @@
+
 import './User.scss';
 import { fetchAllUser } from '../../services/userService';
 import React from 'react';
-
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { deleteUser } from '../../services/userService';
 import ModalDeleteUser from './ModalDelete';
-import MadalUser from './ModalUser';
 import ModalUser from './ModalUser';
+require('dotenv').config();
+console.log("check env >>>", process.env.REACT_APP_EMAIL_ADMIN)
 
 const User = (props) => {
+
     const [listUser, setListUser] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit, setCurrentLimit] = useState(7);
@@ -110,6 +112,8 @@ const User = (props) => {
                                     listUser && listUser.length > 0 ?
                                         <>
                                             {listUser.map((item, index) => {
+                                                let admin = process.env.REACT_APP_EMAIL_ADMIN;
+                                                if (admin === item.userEmail) return;
                                                 return (
                                                     <tr key={`row-${index}`}>
                                                         <td>{(currentPage - 1) * currentLimit + index + 1}</td>

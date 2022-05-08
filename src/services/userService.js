@@ -37,6 +37,7 @@ const getUserAccount = async () => {
 const logoutUser = async () => {
     return await axios.post('/api/v1/logout');
 }
+
 export {
     loginRegisterUser,
     loginUser,
